@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
@@ -9,6 +11,8 @@ use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
+    use DatabaseTransactions;
+
     /**
      * A basic feature test example.
      *
@@ -17,18 +21,27 @@ class LoginTest extends TestCase
     public function test_valid_login_data()
     {
 
-        $response = $this->post('/api/v1/login', $this->create_user());
-
-        $response->assertStatus(200);
-    }  public function test_not_valid_login_data()
-    {
-
-
-        $response = $this->post('/api/v1/login', ['email'=>'test@test.com','password'=>'not_valid_password']);
-
+        $user = User::factory()->create()->first();
+        $user->save();
+        $response = $this->post('/api/V1/auth/login',
+            ['email' => $user->email, 'password' => 'password'],
+            ['accept' => 'application/json']);
         $response->assertStatus(200);
     }
 
+    public function test_not_valid_login_data()
+    {
+
+
+        $response = $this->post('/api/V1/auth/login', ['email' => 'test@test.com', 'password' => 'not_valid_password'],
+            [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+
+            ]);
+
+        $response->assertStatus(422);
+    }
 
 
 }

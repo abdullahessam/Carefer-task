@@ -18,21 +18,21 @@ class RegisterTest extends TestCase
      */
     public function test_valid_registration()
     {
-        $response = $this->post('/api/v1/register', [
-                'name' => 'Test User',
-                'email' => 'test@test.com',
-                'password' => 'password'
-            ]);
+        $response = $this->post('/api/V1/auth/register', [
+            'name' => 'Test User',
+            'email' => 'test@test.com',
+            'password' => 'password'
+        ], ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
     }
 
     public function test_not_valid_registration()
     {
-        $response = $this->post('/api/v1/register', [
+        $response = $this->post('/api/V1/auth/register', [
             'name' => 'Test User',
             'email' => 'test123@test.com',
-        ]);
+        ], ['Accept' => 'application/json']);
 
         $response->assertStatus(422);
     }
