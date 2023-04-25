@@ -13,23 +13,25 @@ class LineRepository implements ILine
     }
 
     /**
-     * get all lines and filter them by start and end stations using query parameters if exists
+     * get all lines and filter them by start and end stations using query parameters if exists.
      * @return Collection
      */
     public function get(): Collection
     {
         $lines = $this->line->filter()->latest()->get();
+
         return $lines;
     }
 
     /**
-     * get line if exists by id and if not throw 404 error
+     * get line if exists by id and if not throw 404 error.
      * @param int $id
      * @return Line
      */
     public function find(int $id): Line
     {
         $line = $this->line->findOrFail($id);
+
         return $line;
     }
 }

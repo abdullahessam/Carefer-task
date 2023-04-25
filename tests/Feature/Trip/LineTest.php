@@ -3,12 +3,7 @@
 namespace Tests\Feature\Trip;
 
 use App\Domains\Trip\V1\Repositories\LineRepository;
-use App\Domains\Trip\V1\Repositories\SeatRepository;
-use App\Http\Resources\Api\V1\Trip\LineResource;
 use App\Models\Line;
-use App\Models\OrderSeat;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class LineTest extends TestCase

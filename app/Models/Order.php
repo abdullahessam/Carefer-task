@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Order
+ * App\Models\Order.
  *
  * @property int $id
  * @property int $user_id
@@ -39,15 +40,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Order extends Model
 {
-    use HasFactory;
 
-    protected $fillable = ['user_id', 'total', 'sub_total', 'discount', 'date', 'line_id','status'];
+    protected $fillable = ['user_id', 'total', 'sub_total', 'discount', 'date', 'line_id', 'status'];
 
     public function line()
     {
         return $this->belongsTo(Line::class);
     }
-
 
     public function user()
     {
@@ -57,5 +56,14 @@ class Order extends Model
     public function seats()
     {
         return $this->hasMany(OrderSeat::class);
+    }
+
+    public function scopeFilter(Builder $builder)
+    {
+        $builder
+            ->where('user_id', auth()->user()->id)
+            ->when(request('status'), fn ($query) => $query->where('status', request('status')))
+            ->when(request('line_id'), fn ($query) => $query->where('line_id', request('line_id')))
+        ->latest();
     }
 }

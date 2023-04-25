@@ -51,7 +51,6 @@ class Handler extends ExceptionHandler
 
     protected function invalidJson($request, ValidationException $exception)
     {
-       return response_error($exception->errors(), 422);
+        return response_error($exception->errors(), 422);
     }
-
 }

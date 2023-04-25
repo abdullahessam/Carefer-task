@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Bus
+ * App\Models\Bus.
  *
  * @property int $id
  * @property string $name
@@ -26,5 +26,5 @@ class Bus extends Model
 {
     use HasFactory;
 
-    protected $fillable=['name'];
+    protected $fillable = ['name'];
 }

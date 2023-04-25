@@ -5,7 +5,6 @@ namespace App\Domains\Trip\V1\Repositories;
 use App\Domains\Booking\V1\Enum\OrderStatusEnum;
 use App\Domains\Trip\V1\Interfaces\ISeat;
 use App\Models\Line;
-use App\Models\Order;
 use App\Models\OrderSeat;
 
 class SeatRepository implements ISeat
@@ -15,7 +14,7 @@ class SeatRepository implements ISeat
     }
 
     /**
-     * get available seats in trip line by getting all seats in line and subtracting the seats that are reserved
+     * get available seats in trip line by getting all seats in line and subtracting the seats that are reserved.
      * @param Line $line
      * @return array
      */
@@ -32,6 +31,7 @@ class SeatRepository implements ISeat
             })
             ->pluck('seat_number')
             ->toArray();
+
         return array_diff($seats, $reservedSeats);
     }
 }

@@ -17,7 +17,7 @@ class BusFactory extends Factory
     public function definition()
     {
         return [
-            'name' => 'bus-' . rand(1, 100)
+            'name' => 'bus-' . rand(1, 100),
         ];
     }
 }

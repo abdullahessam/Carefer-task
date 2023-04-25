@@ -8,13 +8,13 @@ use Illuminate\Support\Collection;
 interface ILine
 {
     /**
-     * list all lines
+     * list all lines.
      * @return array
      */
     public function get(): Collection;
 
     /**
-     * get line by id
+     * get line by id.
      * @param int $id
      * @return Line
      */

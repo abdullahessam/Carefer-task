@@ -3,7 +3,6 @@
 namespace Tests\Feature\Reservation;
 
 use App\Models\User;
-use Illuminate\Support\Arr;
 use Tests\TestCase;
 
 class OrderTest extends TestCase
@@ -26,11 +25,11 @@ class OrderTest extends TestCase
         $data = [
             'name' => 'Test User',
             'email' => 'test@test.com',
-            'password' => 'password'
+            'password' => 'password',
         ];
+
         return $this->post('/api/v1/register', $data);
     }
-
 
     /**
      * A basic feature test example.
@@ -43,7 +42,7 @@ class OrderTest extends TestCase
         $response = $this->actingAs($this->user)->get('/api/v1/orders');
 
         $response->assertStatus(200);
-//        TODO : create test for response data to verify it's correct
+        //        TODO : create test for response data to verify it's correct
         /*   $response->assertExactJson([
                'data' => [],
                'message' => 'success',
@@ -67,7 +66,7 @@ class OrderTest extends TestCase
 
     public function test_create_new_order()
     {
-//        $line=Line::factory()->create();
+        //        $line=Line::factory()->create();
         $response = $this->actingAs($this->user)->post('/api/v1/orders', [
             'line_id' => 1,
             'seats' => [1, 2, 3, 4],
@@ -116,5 +115,4 @@ class OrderTest extends TestCase
         $response->assertStatus(200);
 
     }
-
 }

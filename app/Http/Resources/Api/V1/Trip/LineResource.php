@@ -25,7 +25,7 @@ class LineResource extends JsonResource
             'bus' => new BusResource($this->bus),
             'distance' => $this->distance,
             'price'=>$this->price,
-            'date'=>now()->toDateString()
+            'date'=>now()->toDateString(),
 
         ];
     }

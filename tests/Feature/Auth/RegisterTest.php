@@ -3,8 +3,6 @@
 namespace Tests\Feature\Auth;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class RegisterTest extends TestCase
@@ -21,7 +19,7 @@ class RegisterTest extends TestCase
         $response = $this->post('/api/V1/auth/register', [
             'name' => 'Test User',
             'email' => 'test@test.com',
-            'password' => 'password'
+            'password' => 'password',
         ], ['Accept' => 'application/json']);
 
         $response->assertStatus(200);

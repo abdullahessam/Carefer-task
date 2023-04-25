@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\OrderSeat
+ * App\Models\OrderSeat.
  *
  * @property int $id
  * @property int $order_id
@@ -26,7 +26,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OrderSeat extends Model
 {
-    use HasFactory;
 
     protected $fillable = ['order_id', 'seat_number'];
 

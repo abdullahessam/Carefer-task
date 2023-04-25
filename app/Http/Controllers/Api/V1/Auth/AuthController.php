@@ -6,10 +6,9 @@ use App\Exceptions\InvalidCredentialException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\LoginRequest;
 use App\Http\Requests\Api\V1\Auth\RegisterRequest;
-use App\Services\Auth\V1\DTO\LoginData;
-use App\Services\Auth\V1\DTO\RegisterData;
-use App\Services\Auth\V1\Interfaces\IAuth;
-use Illuminate\Http\Request;
+use App\Domains\Auth\V1\DTO\LoginData;
+use App\Domains\Auth\V1\DTO\RegisterData;
+use App\Domains\Auth\V1\Interfaces\IAuth;
 
 class AuthController extends Controller
 {
@@ -24,10 +23,10 @@ class AuthController extends Controller
         $login_data = LoginData::from($request->validated());
         try {
             $response = $this->auth->login($login_data);
-        }
-        catch (InvalidCredentialException $exception){
+        } catch (InvalidCredentialException $exception) {
             return response_error($exception->getMessage(), 401);
         }
+
         return response_success($response);
     }
 
@@ -35,6 +34,7 @@ class AuthController extends Controller
     {
         $register_data = RegisterData::from($request->validated());
         $response = $this->auth->register($register_data);
+
         return response_success($response);
 
     }

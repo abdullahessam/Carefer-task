@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Services\Auth\V1\Repositories;
+namespace App\Domains\Auth\V1\Repositories;
 
+use App\Domains\Auth\V1\DTO\LoginData;
+use App\Domains\Auth\V1\DTO\RegisterData;
 use App\Exceptions\InvalidCredentialException;
 use App\Http\Resources\Api\V1\Auth\UserResource;
 use App\Models\User;
-use App\Services\Auth\V1\DTO\LoginData;
-use App\Services\Auth\V1\DTO\RegisterData;
-use App\Services\Auth\V1\Interfaces\IAuth;
-use Illuminate\Http\Resources\Json\JsonResource;
+use App\Domains\Auth\V1\Interfaces\IAuth;
 use Illuminate\Support\Facades\Auth;
 
 class AuthRepository implements IAuth
@@ -18,7 +17,7 @@ class AuthRepository implements IAuth
     }
 
     /**
-     * login user
+     * login user.
      * @param LoginData $loginData
      * @return array
      * @throws \Throwable
@@ -36,12 +35,12 @@ class AuthRepository implements IAuth
 
         return [
             'user' => new UserResource($user),
-            'token' => $user->token
+            'token' => $user->token,
         ];
     }
 
     /**
-     * register user
+     * register user.
      * @param RegisterData $registerData
      * @return array
      */
@@ -49,9 +48,10 @@ class AuthRepository implements IAuth
     {
         $user = $this->user->create($registerData->toArray());
         $user->token = $user->createToken('carefer-token')->plainTextToken;
+
         return [
             'user' => new UserResource($user),
-            'token' => $user->token
+            'token' => $user->token,
         ];
     }
 }

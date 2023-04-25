@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * App\Models\Line
+ * App\Models\Line.
  *
  * @property int $id
  * @property int $start_station_id
@@ -66,10 +66,9 @@ class Line extends Model
     }
 
     /**
-     * filter lines by start and end stations
+     * filter lines by start and end stations.
      * @param Builder $builder
      * @return void
-     *
      */
     public function scopeFilter(Builder $builder)
     {

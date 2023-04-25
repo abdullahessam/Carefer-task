@@ -4,8 +4,7 @@ namespace App\Domains\Booking\V1\Enum;
 
 class OrderStatusEnum
 {
-
-    const PENDING = 'pending';
-    const CONFIRMED = 'confirmed';
-    const CANCELLED = 'cancelled';
+    public const PENDING = 'pending';
+    public const CONFIRMED = 'confirmed';
+    public const CANCELLED = 'cancelled';
 }

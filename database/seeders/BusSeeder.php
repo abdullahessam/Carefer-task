@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Bus;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class BusSeeder extends Seeder
@@ -17,10 +16,10 @@ class BusSeeder extends Seeder
     {
         //create buses as described in the task
         Bus::create([
-            'name' => 'bus-1'
+            'name' => 'bus-1',
         ]);
         Bus::create([
-            'name' => 'bus-2'
+            'name' => 'bus-2',
         ]);
     }
 }
