@@ -21,13 +21,15 @@ class LineSeeder extends Seeder
             'start_station_id' => 1,//cairo
             'end_station_id' => 2,//alex
             'bus_id' => 1,//bus-1
-            'distance' => 90,//short trip
+            'distance' => 90,//short trip,
+            'price' => 50
         ]);
         Line::create([
             'start_station_id' => 1,//cairo
             'end_station_id' => 3,//aswan
             'bus_id' => 2,//bus-2
-            'distance' => 1000,//long trip
+            'distance' => 1000,//long trip,
+            'price' => 100
         ]);
     }
 }

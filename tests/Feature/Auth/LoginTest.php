@@ -21,10 +21,8 @@ class LoginTest extends TestCase
     public function test_valid_login_data()
     {
 
-        $user = User::factory()->create()->first();
-        $user->save();
         $response = $this->post('/api/V1/auth/login',
-            ['email' => $user->email, 'password' => 'password'],
+            ['email' => 'albertha77@example.net', 'password' => 'password'],
             ['accept' => 'application/json']);
         $response->assertStatus(200);
     }

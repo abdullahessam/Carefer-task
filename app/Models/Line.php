@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,21 +31,53 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Line whereUpdatedAt($value)
  * @property int $bus_id
  * @method static \Illuminate\Database\Eloquent\Builder|Line whereBusId($value)
+ * @property-read \App\Models\Bus $bus
+ * @method static Builder|Line filter()
  * @mixin \Eloquent
  */
 class Line extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['start_station_id', 'end_station_id', 'distance','price','bus_id'];
+    protected $fillable = ['start_station_id', 'end_station_id', 'distance', 'price', 'bus_id'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function start_station()
     {
         return $this->belongsTo(Station::class, 'start_station_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function end_station()
     {
         return $this->belongsTo(Station::class, 'end_station_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function bus()
+    {
+        return $this->belongsTo(Bus::class);
+    }
+
+    /**
+     * filter lines by start and end stations
+     * @param Builder $builder
+     * @return void
+     *
+     */
+    public function scopeFilter(Builder $builder)
+    {
+        $builder
+            ->when(request('start_station_id'), function ($builder) {
+                $builder->where('start_station_id', request('start_station_id'));
+            })->when(request('end_station_id'), function ($builder) {
+                $builder->where('end_station_id', request('end_station_id'));
+            });
     }
 }
