@@ -17,7 +17,6 @@ interface IOrder
     public function delete(int $id): bool;
 
     public function confirm(int $id): Order;
-    public function expire(int $id): Order;
 
     public function find(int $id): Order;
 }

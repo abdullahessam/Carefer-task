@@ -8,11 +8,11 @@ use App\Domains\Booking\V1\Interfaces\IOrder;
 use App\Domains\Booking\V1\Services\OrderService;
 use App\Domains\Trip\V1\Interfaces\ILine;
 use App\Domains\Trip\V1\Repositories\LineRepository;
+use App\Exceptions\CancelOrderException;
 use App\Exceptions\OrderNotPendingException;
 use App\Models\Line;
 use App\Models\Order;
 use Illuminate\Support\Collection;
-use mysql_xdevapi\Exception;
 
 class OrderRepository implements IOrder
 {
@@ -46,7 +46,7 @@ class OrderRepository implements IOrder
      */
     public function store(OrderData $data): Order
     {
-        $orderService = new OrderService($this->order, $data->line_id);
+        $orderService = new OrderService($this->order);
 
         return $orderService->store($data);
 
@@ -62,21 +62,15 @@ class OrderRepository implements IOrder
     {
         $order = $this->order->find($id);
         if ($order->status == OrderStatusEnum::PENDING) {
-            $order->update($data);
-        }else{
+            // init order service
+            $orderService = new OrderService($order);
+            //get the updated order
+            $order = $orderService->update($data);
+
+        } else {
             throw new OrderNotPendingException('you can not update this order because it is not pending');
         }
         return $order;
-    }
-
-    public function expire(int $id): Order
-    {
-        $order = $this->order->find($id);
-        if ($order->status == OrderStatusEnum::PENDING) {
-            $order->update(['status' => OrderStatusEnum::EXPIRED]);
-        }
-        return $order;
-
     }
 
     /**
@@ -86,8 +80,13 @@ class OrderRepository implements IOrder
      */
     public function delete(int $id): bool
     {
-        $this->order->find($id)->update(['status' => OrderStatusEnum::CANCELLED]);
-        return true;
+        $order = $this->order->find($id);
+        // init order service
+        $orderService = new OrderService($order);
+        //get the updated order
+
+        return $orderService->delete();
+
     }
 
     /**
@@ -97,7 +96,13 @@ class OrderRepository implements IOrder
      */
     public function confirm(int $id): Order
     {
-        // TODO: Implement confirm() method.
+        $order = $this->order->find($id);
+        // init order service
+        $orderService = new OrderService($order);
+        //get the updated order
+        $order = $orderService->confirm();
+
+        return $order;
     }
 
     /**
@@ -107,6 +112,6 @@ class OrderRepository implements IOrder
      */
     public function find(int $id): Order
     {
-        return  $this->order->findOrFail($id);
+        return $this->order->findOrFail($id);
     }
 }

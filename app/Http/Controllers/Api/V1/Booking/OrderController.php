@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Booking;
 
 use App\Domains\Booking\V1\DTO\OrderData;
 use App\Domains\Booking\V1\Interfaces\IOrder;
+use App\Exceptions\CancelOrderException;
 use App\Exceptions\OrderNotPendingException;
 use App\Exceptions\ReservationBusyException;
 use App\Http\Controllers\Controller;
@@ -73,7 +74,7 @@ class OrderController extends Controller
     public function update(UpdateRequest $request, int $id)
     {
         try {
-            $order= $this->order->update($id, $request->validated());
+            $order = $this->order->update($id, $request->validated());
         } catch (ReservationBusyException|OrderNotPendingException $exception) {
             return response_error(['message' => $exception->getMessage()]);
         }
@@ -88,6 +89,11 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $this->order->delete($id);
+            return response_success(['message' => 'Order deleted successfully']);
+        } catch (CancelOrderException $exception) {
+            return response_error(['message' => $exception->getMessage()]);
+        }
     }
 }
