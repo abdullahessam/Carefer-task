@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Domains\Booking\V1\Enum\OrderStatusEnum;
 use App\Helpers\Traits\HasPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -78,5 +79,15 @@ class User extends Authenticatable
     public function getByEmail(string $email): ?self
     {
         return $this->where('email', $email)->first();
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function confirmedOrders()
+    {
+        return $this->hasMany(Order::class)->where('status', OrderStatusEnum::CONFIRMED);
     }
 }

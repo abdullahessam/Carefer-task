@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\Booking\ConfirmOrderController;
 use App\Http\Controllers\Api\V1\Booking\OrderController;
+use App\Http\Controllers\Api\V1\Report\MostFrequentTripsReportController;
 use App\Http\Controllers\Api\V1\Trip\LineController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,10 @@ Route::group(['prefix' => 'booking', 'middleware' => 'auth:sanctum'], function (
     Route::apiResource('orders', OrderController::class);
 
     Route::post('orders/{order}/confirm', ConfirmOrderController::class);
+});
+
+Route::group(['prefix' => 'reports'], function () {
+
+    Route::get('most-frequent-trips', MostFrequentTripsReportController::class);
+
 });

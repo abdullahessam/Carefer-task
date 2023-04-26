@@ -1,4 +1,5 @@
 version: '3'
+name: 'carefer-task'
 services:
     laravel.test:
         build:
