@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
+use App\Domains\Auth\V1\DTO\LoginData;
+use App\Domains\Auth\V1\DTO\RegisterData;
+use App\Domains\Auth\V1\Interfaces\IAuth;
 use App\Exceptions\InvalidCredentialException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\LoginRequest;
 use App\Http\Requests\Api\V1\Auth\RegisterRequest;
-use App\Domains\Auth\V1\DTO\LoginData;
-use App\Domains\Auth\V1\DTO\RegisterData;
-use App\Domains\Auth\V1\Interfaces\IAuth;
 
 class AuthController extends Controller
 {

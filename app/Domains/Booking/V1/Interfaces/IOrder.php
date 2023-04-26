@@ -8,15 +8,16 @@ use Illuminate\Support\Collection;
 
 interface IOrder
 {
-    public function index(): Collection;
+    public function get(): Collection;
 
     public function store(OrderData $data): Order;
 
-    public function update(int $id, OrderData $data): Order;
+    public function update(int $id, array $data): Order;
 
     public function delete(int $id): bool;
 
     public function confirm(int $id): Order;
+    public function expire(int $id): Order;
 
-    public function show(int $id): Order;
+    public function find(int $id): Order;
 }

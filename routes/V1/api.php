@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
+use App\Http\Controllers\Api\V1\Booking\OrderController;
 use App\Http\Controllers\Api\V1\Trip\LineController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,8 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['prefix' => 'trips'], function () {
     Route::apiResource('lines', LineController::class)->only(['index', 'show']);
+});
+
+Route::group(['prefix' => 'booking', 'middleware' => 'auth:sanctum'], function () {
+    Route::apiResource('orders', OrderController::class);
 });

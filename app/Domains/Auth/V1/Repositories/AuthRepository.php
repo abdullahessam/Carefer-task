@@ -4,10 +4,10 @@ namespace App\Domains\Auth\V1\Repositories;
 
 use App\Domains\Auth\V1\DTO\LoginData;
 use App\Domains\Auth\V1\DTO\RegisterData;
+use App\Domains\Auth\V1\Interfaces\IAuth;
 use App\Exceptions\InvalidCredentialException;
 use App\Http\Resources\Api\V1\Auth\UserResource;
 use App\Models\User;
-use App\Domains\Auth\V1\Interfaces\IAuth;
 use Illuminate\Support\Facades\Auth;
 
 class AuthRepository implements IAuth

@@ -9,7 +9,7 @@ function response_success($data, $status = 200, $headers = [], $options = 0)
     ], $status, $headers, $options);
 }
 
-function response_error($data, $status = 200, $headers = [], $options = 0)
+function response_error($data, $status = 422, $headers = [], $options = 0)
 {
     return response([
         'data' => $data,

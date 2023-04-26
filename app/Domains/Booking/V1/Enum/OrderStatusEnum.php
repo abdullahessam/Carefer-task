@@ -7,4 +7,5 @@ class OrderStatusEnum
     public const PENDING = 'pending';
     public const CONFIRMED = 'confirmed';
     public const CANCELLED = 'cancelled';
+    public const EXPIRED = 'expired';
 }
