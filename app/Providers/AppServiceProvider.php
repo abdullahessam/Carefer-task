@@ -28,6 +28,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ISeat::class, SeatRepository::class);
         $this->app->singleton(IOrder::class, OrderRepository::class);
         $this->app->singleton(IReport::class, ReportRepository::class);
+
+        if (! $this->app->environment('build', 'testing')) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 
     /**

@@ -18,8 +18,6 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        info('login request');
-        info($request->validated());
         $login_data = LoginData::from($request->validated());
         try {
             $response = $this->auth->login($login_data);
