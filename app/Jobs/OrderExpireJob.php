@@ -3,7 +3,9 @@
 namespace App\Jobs;
 
 use App\Domains\Booking\V1\Enum\OrderStatusEnum;
+use App\Domains\Booking\V1\Interfaces\IOrder;
 use App\Domains\Booking\V1\Repositories\OrderRepository;
+use App\Domains\Booking\V1\Services\Order\OrderService;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -32,9 +34,8 @@ class OrderExpireJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(OrderService $orderService)
     {
-        $orderRepository = new OrderRepository(new Order());
-        $orderRepository->expire($this->order->id);
+        $orderService->expire($this->order->id);
     }
 }

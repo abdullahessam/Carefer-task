@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Helpers\Traits\LockService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\Console\Command\LockableTrait;
 
 /**
  * App\Models\Line.
@@ -37,7 +39,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Line extends Model
 {
-    use HasFactory;
+    use HasFactory,LockService;
 
     protected $fillable = ['start_station_id', 'end_station_id', 'distance', 'price', 'bus_id'];
 

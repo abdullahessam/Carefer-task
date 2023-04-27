@@ -5,10 +5,9 @@ namespace App\Domains\Booking\V1\Repositories;
 use App\Domains\Booking\V1\DTO\OrderData;
 use App\Domains\Booking\V1\Enum\OrderStatusEnum;
 use App\Domains\Booking\V1\Interfaces\IOrder;
-use App\Domains\Booking\V1\Services\OrderService;
+use App\Domains\Booking\V1\Services\Order\OrderService;
 use App\Domains\Trip\V1\Interfaces\ILine;
 use App\Domains\Trip\V1\Repositories\LineRepository;
-use App\Exceptions\CancelOrderException;
 use App\Exceptions\OrderNotPendingException;
 use App\Models\Line;
 use App\Models\Order;
@@ -19,11 +18,9 @@ class OrderRepository implements IOrder
     /**
      * @param Order $order
      */
-    private ILine $line;
 
-    public function __construct(public Order $order)
+    public function __construct(public Order $order, public ILine $line)
     {
-        $this->line = new LineRepository(new Line());
     }
 
     /**
@@ -46,9 +43,10 @@ class OrderRepository implements IOrder
      */
     public function store(OrderData $data): Order
     {
-        $orderService = new OrderService($this->order);
 
-        return $orderService->store($data);
+        $order = $this->order->create($data->toArray());
+
+        return $order;
 
     }
 
@@ -61,15 +59,7 @@ class OrderRepository implements IOrder
     public function update(int $id, array $data): Order
     {
         $order = $this->order->find($id);
-        if ($order->status == OrderStatusEnum::PENDING) {
-            // init order service
-            $orderService = new OrderService($order);
-            //get the updated order
-            $order = $orderService->update($data);
-
-        } else {
-            throw new OrderNotPendingException('you can not update this order because it is not pending');
-        }
+        $order->update($data);
         return $order;
     }
 
@@ -78,30 +68,11 @@ class OrderRepository implements IOrder
      * @param int $id
      * @return bool
      */
-    public function delete(int $id): bool
+    public function delete(int $id): Order
     {
-        $order = $this->order->find($id);
-        // init order service
-        $orderService = new OrderService($order);
-        //get the updated order
-
-        return $orderService->delete();
-
-    }
-
-    /**
-     * update order status to confirm.
-     * @param int $id
-     * @return Order
-     */
-    public function confirm(int $id): Order
-    {
-        $order = $this->order->find($id);
-        // init order service
-        $orderService = new OrderService($order);
-        //get the updated order
-        $order = $orderService->confirm();
-
+        throw_if($this->order->find($id)->status !== OrderStatusEnum::PENDING, new OrderNotPendingException('can not cancel order that is not pending'));
+        $order = $this->update($id, ['status' => OrderStatusEnum::CANCELLED]);
+        $order->line->release();
         return $order;
     }
 
@@ -114,4 +85,6 @@ class OrderRepository implements IOrder
     {
         return $this->order->findOrFail($id);
     }
+
+
 }

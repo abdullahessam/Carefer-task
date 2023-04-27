@@ -14,9 +14,8 @@ interface IOrder
 
     public function update(int $id, array $data): Order;
 
-    public function delete(int $id): bool;
-
-    public function confirm(int $id): Order;
+    public function delete(int $id): Order;
 
     public function find(int $id): Order;
+
 }

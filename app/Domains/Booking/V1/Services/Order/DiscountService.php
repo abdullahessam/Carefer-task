@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domains\Booking\V1\Services;
+namespace App\Domains\Booking\V1\Services\Order;
 
 class DiscountService
 {
