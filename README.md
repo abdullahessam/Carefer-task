@@ -41,6 +41,7 @@ composer install
 
 # How to test ?
 ## after installing the project
+i created database with sqlite for testing purpose, so you can run the tests without any problems also  i created database connection named : sqlite_testing in the .env.testing file .
 ```shell
 ./vendor/bin/sail test
 ```
