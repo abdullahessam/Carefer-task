@@ -17,7 +17,8 @@ class LineFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'distance' => rand(50,100),
+            'price' => rand(50,100),
         ];
     }
 }

@@ -26,7 +26,6 @@ trait LockService
     public function release(): bool
     {
         $key = $this->getLockKey();
-
         $lua = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
 
         return Redis::eval($lua, 1, $key, Redis::get($key)) !== 0;

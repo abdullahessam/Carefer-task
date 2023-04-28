@@ -78,7 +78,7 @@ class OrderService
 
         } else {
             // Failed to acquire lock, throw an exception
-            throw new ReservationBusyException("Failed to acquire lock for line {$data->line_id}");
+            throw new ReservationBusyException("Please wait for 2 minutes");
         }
 
     }

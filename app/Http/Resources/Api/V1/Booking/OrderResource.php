@@ -24,12 +24,13 @@ class OrderResource extends JsonResource
             'id'=> $this->id,
             'line'=>new LineResource($this->line),
             'user'=>new UserResource($this->user),
-            'seats'=>$this->seats()->pluck('seat_number'),
             'sub_total'=>$this->sub_total,
             'discount'=>$this->discount,
             'total'=>$this->total,
             'status'=>$this->status,
             'created_at'=>$this->created_at->toDateTimeString(),
+            'seats'=>$this->seats()->pluck('seat_number'),
+
         ];
     }
 }

@@ -24,11 +24,17 @@ class ConfirmOrderController extends Controller
      */
     public function __invoke(ConfirmRequest $request, $orderID, OrderService $orderService)
     {
+
+        \Log::debug('hello i am here');
         try {
+            info('here is the order id: '.$orderID);
             $order = $orderService->confirm($orderID);
             return response_success(new OrderResource($order));
         } catch (ConfirmingOrderException $exception) {
             return response_error(['message'=>$exception->getMessage()]);
+        } catch (\Throwable $e) {
+            return response_error(['message'=>$e->getMessage()]);
+
         }
 
     }
