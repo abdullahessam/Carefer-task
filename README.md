@@ -1,66 +1,93 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Carefer Technical Assessment
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+a Bus Tickets Reservation System with the following
 
-## About Laravel
+* The ticket should be issued with the user's email
+* The user Should be able to book a ticket for one or more passengers in one request
+* The user should provide the seat Ids
+* The user should get a discount if he booked for more than five passengers
+* The user should provide the pickup and destination stations
+* We have two types of buses one for long trips and one for short trips if the trip distance is
+  greater than or equal to 100 KM will be considered a long trip
+* The number of reserved tickets should don’t exceed the bus capacity
+* If a user started a reservation on a bus no other user should be able to do a reservation on the
+  same bus
+* The reservation session should be only two minutes if the user exceeded the two minutes the
+  reservation session should be canceled and make the bus free for reservation again
+* The system should record all reservations in the database for reporting purposes
+## Installation
+### Prerequisites
+* You must have Docker installed.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+```shell
+git clone https://github.com/abdullahessam/Carefer-task
+cd Carefer-task
+cp .env.example .env
+composer install
+./vendor/bin/sail up -d
+./vendor/bin/sail artisan migrate
+./vendor/bin/sail artisan db:seed
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```
+# Database structure
+![alt database](https://www11.0zz0.com/2023/04/28/01/194804685.png)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# How it works ?
+* using laravel sail package that provides ready docker container for the project  php-8.0 / mysql / redis
+  also I install ed phpmyadmin for accessing the database .
+* using laravel sanctum for authentication and api token generation .
+* I used redis for lock the bus by locking the line->id for 2 minutes and used delayed job for expiring the order if the use take no action (confirming / canceling)
+* I handled seats number by just register the reserved seats in the database and get the available seats by subtracting the reserved seats from the bus capacity which is by default 20 seats .
 
-## Learning Laravel
+# How to test ?
+## after installing the project
+```shell
+./vendor/bin/sail test
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# API Documentation and Endpoints
+here is the postman collection for the api endpoints you can import it and test the api .
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/2535308/2s93eR6bj5)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# The Main Flow to book a ticket
+* The user should be logged in to make a reservation (login , register)
+* The user should select the Line (bus) and the trip he wants to reserve .
+* The user should select the seats he wants to reserve .
+* The user should confirm the reservation .
+* The user can cancel the reservation before the 2 minutes expire .
+* The user can update his order line's and seat's before confirming the reservation .
+* The user can get all his orders .
 
-## Laravel Sponsors
+# Monitoring
+* I used laravel telescope for monitoring the application requests , logs and the database queries .
+here you can access the telescope dashboard by this link http://localhost/telescope
+* I used laravel horizon for monitoring the delayed jobs and the failed jobs .
+here you can access the horizon dashboard by this link http://localhost/horizon
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+# The Main Packages I used
+* laravel sail
+* laravel sanctum
+* laravel telescope
+* laravel horizon
+* Spatie Data
+* friendsofphp/php-cs-fixer
 
-### Premium Partners
+# Files Structure
+* app/Http/Controllers/Api/V1/ : contains the api controllers
+* app/Http/Requests/Api/V1/ : contains the api requests
+* app/Models/ : contains the models
+* app/Domains : contains the business logic
+* app/Exceptions/ : contains the custom exceptions
+* app/Http/Resources/ : contains the api resources
+* app/Rules/ : contains the custom validation rules
+* app/Helpers/ : contains the helper functions
+* database/migrations/ : contains the database migrations
+* tests/Feature/ : contains the feature tests
+* route/v1/api.php : contains the api routes
+* ./docker-compose.yml --> the docker compose file.
+ * ./docker/* --> Contains the docker services configurations such nginx.
+*  ./config/*.php --> Contains the configuration files such as sanctum and more.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Finally
+* thanks and if you have any questions please contact me.
