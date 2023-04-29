@@ -15,8 +15,11 @@ a Bus Tickets Reservation System with the following
 * The reservation session should be only two minutes if the user exceeded the two minutes the
   reservation session should be canceled and make the bus free for reservation again
 * The system should record all reservations in the database for reporting purposes
+
 ## Installation
+
 ### Prerequisites
+
 * You must have Docker installed.
 
 ```shell
@@ -28,31 +31,52 @@ php artisan key:generate
 ./vendor/bin/sail up -d
 ./vendor/bin/sail artisan migrate
 ./vendor/bin/sail artisan db:seed
-
 ```
+
+## Used Ports
+
+this is the ports I used to for the project
+
+| Port |     usage      |
+|:-----|:--------------:|
+| 8080 | laravel server |
+| 3307 |     mysql      |
+| 6378 |     redis      |
+
+feel free to update any port in .env file
+
 # Database structure
+
 ![alt database](https://www11.0zz0.com/2023/04/28/01/194804685.png)
 
 # How it works ?
-* using laravel sail package that provides ready docker container for the project  php-8.0 / mysql / redis
+
+* using laravel sail package that provides ready docker container for the project php-8.0 / mysql / redis
   also I install ed phpmyadmin for accessing the database .
 * using laravel sanctum for authentication and api token generation .
-* I used redis for lock the bus by locking the line->id for 2 minutes and used delayed job for expiring the order if the use take no action (confirming / canceling)
-* I handled seats number by just register the reserved seats in the database and get the available seats by subtracting the reserved seats from the bus capacity which is by default 20 seats .
+* I used redis for lock the bus by locking the line->id for 2 minutes and used delayed job for expiring the order if the
+  use take no action (confirming / canceling)
+* I handled seats number by just register the reserved seats in the database and get the available seats by subtracting
+  the reserved seats from the bus capacity which is by default 20 seats .
 
 # How to test ?
+
 ## after installing the project
-i created database with sqlite for testing purpose, so you can run the tests without any problems also  i created database connection named : sqlite_testing in the .env.testing file .
+
+i created database with sqlite for testing purpose, so you can run the tests without any problems also i created
+database connection named : sqlite_testing in the .env.testing file .
+
 ```shell
 ./vendor/bin/sail test
 ```
 
-
 # API Documentation and Endpoints
+
 here is the postman collection for the api endpoints you can import it and test the api .
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://documenter.getpostman.com/view/2535308/2s93eR6bj5)
 
 # The Main Flow to book a ticket
+
 * The user should be logged in to make a reservation (login , register)
 * The user should select the Line (bus) and the trip he wants to reserve .
 * The user should select the seats he wants to reserve .
@@ -62,12 +86,14 @@ here is the postman collection for the api endpoints you can import it and test 
 * The user can get all his orders .
 
 # Monitoring
+
 * I used laravel telescope for monitoring the application requests , logs and the database queries .
-here you can access the telescope dashboard by this link http://localhost/telescope
+  here you can access the telescope dashboard by this link http://localhost/telescope
 * I used laravel horizon for monitoring the delayed jobs and the failed jobs .
-here you can access the horizon dashboard by this link http://localhost/horizon
+  here you can access the horizon dashboard by this link http://localhost/horizon
 
 # The Main Packages I used
+
 * laravel sail
 * laravel sanctum
 * laravel telescope
@@ -76,6 +102,7 @@ here you can access the horizon dashboard by this link http://localhost/horizon
 * friendsofphp/php-cs-fixer
 
 # Files Structure
+
 * app/Http/Controllers/Api/V1/ : contains the api controllers
 * app/Http/Requests/Api/V1/ : contains the api requests
 * app/Models/ : contains the models
@@ -88,8 +115,9 @@ here you can access the horizon dashboard by this link http://localhost/horizon
 * tests/Feature/ : contains the feature tests
 * route/v1/api.php : contains the api routes
 * ./docker-compose.yml --> the docker compose file.
- * ./docker/* --> Contains the docker services configurations such nginx.
-*  ./config/*.php --> Contains the configuration files such as sanctum and more.
+* ./docker/* --> Contains the docker services configurations such nginx.
+* ./config/*.php --> Contains the configuration files such as sanctum and more.
 
 # Finally
+
 * thanks and if you have any questions please contact me.

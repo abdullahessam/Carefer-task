@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Domains\Auth\V1\DTO\LoginData;
 use App\Domains\Auth\V1\DTO\RegisterData;
-use App\Domains\Auth\V1\Interfaces\IAuth;
+use App\Domains\Auth\V1\Services\AuthService;
 use App\Exceptions\InvalidCredentialException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\LoginRequest;
@@ -12,7 +12,7 @@ use App\Http\Requests\Api\V1\Auth\RegisterRequest;
 
 class AuthController extends Controller
 {
-    public function __construct(public IAuth $auth)
+    public function __construct(public AuthService $auth)
     {
     }
 

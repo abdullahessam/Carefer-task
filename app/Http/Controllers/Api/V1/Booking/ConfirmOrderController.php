@@ -12,9 +12,6 @@ use Illuminate\Http\Request;
 
 class ConfirmOrderController extends Controller
 {
-    public function __construct(public IOrder $order)
-    {
-    }
 
     /**
      * Handle the incoming request.

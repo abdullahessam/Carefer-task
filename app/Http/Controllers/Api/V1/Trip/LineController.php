@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api\V1\Trip;
 
 use App\Domains\Trip\V1\Interfaces\ILine;
 use App\Domains\Trip\V1\Interfaces\ISeat;
+use App\Domains\Trip\V1\Services\TripService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\Trip\LineResource;
 
 class LineController extends Controller
 {
-    public function __construct(public ILine $line, public ISeat $seat)
+    public function __construct(public TripService $tripService)
     {
     }
 
@@ -20,7 +21,7 @@ class LineController extends Controller
      */
     public function index()
     {
-        return response_success(LineResource::collection($this->line->get()));
+        return response_success($this->tripService->get());
     }
 
     /**
@@ -31,12 +32,6 @@ class LineController extends Controller
      */
     public function show($id)
     {
-        $line = $this->line->find($id);
-        $availableSeats = $this->seat->availableSeats($line);
-
-        return response_success([
-            'line' => new LineResource($line),
-            'available_seats' => $availableSeats,
-        ]);
+        return response_success($this->tripService->find($id));
     }
 }

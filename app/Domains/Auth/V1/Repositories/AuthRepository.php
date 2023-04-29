@@ -8,7 +8,8 @@ use App\Domains\Auth\V1\Interfaces\IAuth;
 use App\Exceptions\InvalidCredentialException;
 use App\Http\Resources\Api\V1\Auth\UserResource;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use Auth;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class AuthRepository implements IAuth
 {
@@ -22,7 +23,7 @@ class AuthRepository implements IAuth
      * @return array
      * @throws \Throwable
      */
-    public function login(LoginData $loginData): array
+    public function login(LoginData $loginData): Authenticatable
     {
         //check if credentials are valid or throw an exception
         throw_unless(Auth::attempt($loginData->toArray()), new InvalidCredentialException('Invalid email/password'));
@@ -33,10 +34,7 @@ class AuthRepository implements IAuth
 
         $user->token = $user->createToken('carefer-token')->plainTextToken;
 
-        return [
-            'user' => new UserResource($user),
-            'token' => $user->token,
-        ];
+        return $user;
     }
 
     /**
@@ -44,14 +42,11 @@ class AuthRepository implements IAuth
      * @param RegisterData $registerData
      * @return array
      */
-    public function register(RegisterData $registerData): array
+    public function register(RegisterData $registerData): Authenticatable
     {
         $user = $this->user->create($registerData->toArray());
         $user->token = $user->createToken('carefer-token')->plainTextToken;
+        return $user;
 
-        return [
-            'user' => new UserResource($user),
-            'token' => $user->token,
-        ];
     }
 }

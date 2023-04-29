@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domains\Booking\V1\Services;
+namespace App\Services;
 
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\InteractsWithTime;
