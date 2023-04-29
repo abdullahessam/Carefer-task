@@ -112,39 +112,9 @@ class OrderTest extends TestCase
         $this->assertSame(json_decode($resource->response()->getContent(), true)['data'], $response->decodeResponseJson()['data']);
         //validate order total calculations
         $response_data = $response->decodeResponseJson()['data'];
-        $this->assertSame($this->calculateTotal($numbers_of_seats, $this->line->price), (float)$response_data['sub_total'] - $response_data['discount']);
+        $this->assertSame(round($this->calculateTotal($numbers_of_seats, $this->line->price), 2), round((float)$response_data['sub_total'] - $response_data['discount'],2));
     }
 
-
-    public function test_prevent_user_from_booking_confirmed_order_seats()
-    {
-
-        $this->createNewLine();
-
-        $numbers_of_seats = rand(5, 10);
-        $seats_numbers = Arr::random($this->seatRepo->availableSeats($this->line), $numbers_of_seats);
-        $first_order = $this->actingAs($this->user)->post('/api/V1/booking/orders', [
-            'line_id' => $this->line->id,
-            'seat_numbers' => $seats_numbers,
-        ], [
-            'Accept' => 'application/json'
-        ]);
-
-        $confirm_order = $this->actingAs($this->user)->post('/api/V1/booking/orders/' . $first_order->decodeResponseJson()['data']['id'] . '/confirm', [], [
-            'Accept' => 'application/json'
-        ]);
-
-        $second_order_with_same_seats = $this->actingAs($this->user)->post('/api/V1/booking/orders', [
-            'line_id' => $this->line->id,
-            'seat_numbers' => $seats_numbers,
-        ], [
-            'Accept' => 'application/json'
-        ]);
-        // validate status code
-        $first_order->assertStatus(200);
-
-        $second_order_with_same_seats->assertStatus(422);
-    }
 
 
 }

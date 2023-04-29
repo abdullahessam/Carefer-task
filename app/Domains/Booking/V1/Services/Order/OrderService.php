@@ -5,6 +5,7 @@ namespace App\Domains\Booking\V1\Services\Order;
 use App\Domains\Booking\V1\DTO\OrderData;
 use App\Domains\Booking\V1\Enum\OrderStatusEnum;
 use App\Domains\Booking\V1\Interfaces\IOrder;
+use App\Domains\Booking\V1\Services\LockService;
 use App\Domains\Trip\V1\Interfaces\ILine;
 use App\Domains\Trip\V1\Interfaces\ISeat;
 use App\Domains\Trip\V1\Repositories\LineRepository;
@@ -21,17 +22,29 @@ use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
-    private PriceService $priceService;
-    private DiscountService $discountService;
-
-    private ILine $lineRepo;
     const EXPIRATION_TIME = 120;
 
-    public function __construct(public IOrder $orderRepo, public ISeat $seatRepo, public Order $order)
+    public function __construct(public IOrder $orderRepo, public ISeat $seatRepo, public Order $order, public ILine $lineRepo, public PriceService $priceService, public DiscountService $discountService, public LockService $lockService)
     {
-        $this->priceService = new PriceService();
-        $this->discountService = new DiscountService();
-        $this->lineRepo = new LineRepository(new Line());
+    }
+
+    /**
+     * get orders that associated with current user.
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return $this->orderRepo->get();
+    }
+
+    /**
+     * get order details by id
+     * @param $id
+     * @return Order
+     */
+    public function find($id): Order
+    {
+        return $this->orderRepo->find($id);
     }
 
     public function store(OrderData $data): Order
@@ -40,7 +53,7 @@ class OrderService
 
         // Acquire lock for the line
         // the lock will be released after 2 minutes as mentioned in the task
-        $lockAcquired = $line->acquire(self::EXPIRATION_TIME);
+        $lockAcquired = $this->lockService->acquire($line->getLockKey(), self::EXPIRATION_TIME);
         if ($lockAcquired) {
             // Lock acquired, start transaction
             DB::beginTransaction();
@@ -150,19 +163,20 @@ class OrderService
      */
     protected function releaseLock(): void
     {
-        $this->order->line->refreshLock(self::EXPIRATION_TIME);
+        $this->lockService->release($this->order->line->getLockKey());
     }
 
     /**
      * Delete the order and release the lock by soft deleting the order
      * @return true
      */
-    public function delete(DeleteRequest $request): bool
+    public function delete($id): bool
     {
+        $this->order=$this->orderRepo->find($id);
         if ($this->order->status != OrderStatusEnum::PENDING) {
             throw new CancelOrderException('Cannot delete non pending order');
         }
-        $this->orderRepo->update($this->order->id, ['status' => OrderStatusEnum::CANCELLED]);
+        $this->orderRepo->delete($this->order->id);
         $this->releaseLock();
         return true;
     }
@@ -174,11 +188,11 @@ class OrderService
      */
     public function confirm($id): Order
     {
-        $order = $this->orderRepo->find($id);
-        throw_if($order->status != OrderStatusEnum::PENDING, new ConfirmingOrderException('Cannot confirm non pending order'));
-        $this->orderRepo->update($order->id, ['status' => OrderStatusEnum::CONFIRMED]);
-        $order->line->release();
-        return $order->refresh();
+        $this->order = $this->orderRepo->find($id);
+        throw_if($this->order->status != OrderStatusEnum::PENDING, new ConfirmingOrderException('Cannot confirm non pending order'));
+        $this->orderRepo->update($this->order->id, ['status' => OrderStatusEnum::CONFIRMED]);
+        $this->releaseLock();
+        return $this->order->refresh();
     }
 
     /**
@@ -188,6 +202,8 @@ class OrderService
      */
     public function expire(int $id): void
     {
+        $order=$this->orderRepo->find($id);
+        throw_unless($order->status === OrderStatusEnum::PENDING, new OrderNotPendingException('You can not expire non pending order'));
         $this->orderRepo->update($id, ['status' => OrderStatusEnum::EXPIRED]);
     }
 

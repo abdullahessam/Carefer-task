@@ -70,10 +70,7 @@ class OrderRepository implements IOrder
      */
     public function delete(int $id): Order
     {
-        throw_if($this->order->find($id)->status !== OrderStatusEnum::PENDING, new OrderNotPendingException('can not cancel order that is not pending'));
-        $order = $this->update($id, ['status' => OrderStatusEnum::CANCELLED]);
-        $order->line->release();
-        return $order;
+        return $this->update($id, ['status' => OrderStatusEnum::CANCELLED]);
     }
 
     /**

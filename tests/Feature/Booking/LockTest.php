@@ -8,6 +8,7 @@ use App\Models\Bus;
 use App\Models\Line;
 use App\Models\Station;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Arr;
 use Tests\TestCase;
 
@@ -122,6 +123,7 @@ class LockTest extends TestCase
         ], [
             'Accept' => 'application/json'
         ]);
+
         $confirm_first_order = $this->actingAs($this->user)->post('/api/V1/booking/orders/' . $first_response->decodeResponseJson()['data']['id'] . '/confirm', [], [
             'Accept' => 'application/json'
         ]);

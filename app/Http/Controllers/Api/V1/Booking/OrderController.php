@@ -16,7 +16,7 @@ use App\Http\Resources\Api\V1\Booking\OrderResource;
 
 class OrderController extends Controller
 {
-    public function __construct(public IOrder $order, public OrderService $orderService)
+    public function __construct(public OrderService $orderService)
     {
     }
 
@@ -28,7 +28,7 @@ class OrderController extends Controller
     public function index()
     {
         return response_success([
-            OrderResource::collection($this->order->get()),
+            OrderResource::collection($this->orderService->get()),
         ]);
     }
 
@@ -62,7 +62,7 @@ class OrderController extends Controller
      */
     public function show(ShowRequest $request, int $id)
     {
-        return response_success(new OrderResource($this->order->find($id)));
+        return response_success(new OrderResource($this->orderService->find($id)));
     }
 
     /**
@@ -88,10 +88,10 @@ class OrderController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         try {
-            $this->order->delete($id);
+            $this->orderService->delete($id);
             return response_success(['message' => 'Order deleted successfully']);
         } catch (OrderNotPendingException $exception) {
             return response_error(['message' => $exception->getMessage()]);

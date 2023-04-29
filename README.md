@@ -24,6 +24,7 @@ git clone https://github.com/abdullahessam/Carefer-task
 cd Carefer-task
 cp .env.example .env
 composer install
+php artisan key:generate
 ./vendor/bin/sail up -d
 ./vendor/bin/sail artisan migrate
 ./vendor/bin/sail artisan db:seed
